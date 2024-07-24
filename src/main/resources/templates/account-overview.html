@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <!-- Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Optional Bootstrap JS and dependencies -->
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    <!-- Custom CSS -->
+    <link href="/css/account-overview.css" rel="stylesheet">
+</head>
+<body>
+<div th:replace="~{fragments/header :: header}"></div>
+<div class="container">
+    <div class="balance-container text-center my-5">
+        <h1 class="display-4">Account Balance: <span class="text-primary" th:text="${accountBalance}"></span></h1>
+        <div class="d-flex justify-content-center mt-3">
+            <button type="button" class="btn btn-success btn-lg mx-2" data-toggle="modal" data-target="#depositModal">Deposit</button>
+            <button type="button" class="btn btn-danger btn-lg mx-2" data-toggle="modal" data-target="#withdrawModal">Withdrawal</button>
+        </div>
+    </div>
+
+    <!-- Deposit Modal -->
+    <div class="modal fade" id="depositModal" tabindex="-1" role="dialog" aria-labelledby="depositModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="depositModalLabel">Deposit Money</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <form th:action="@{/account/deposit}" method="post">
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label for="depositAmount">Amount</label>
+                            <input type="number" class="form-control" id="depositAmount" name="amount" min="1" required>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-success">Deposit</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Withdrawal Modal -->
+    <div class="modal fade" id="withdrawModal" tabindex="-1" role="dialog" aria-labelledby="withdrawModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="withdrawModalLabel">Withdraw Money</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <form th:action="@{/account/withdraw}" method="post">
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label for="withdrawAmount">Amount</label>
+                            <input type="number" class="form-control" id="withdrawAmount" name="amount" min="1" required>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-danger">Withdraw</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="transactions-container">
+        <h2 class="my-4">Transactions</h2>
+        <table class="table table-striped">
+            <thead>
+            <tr>
+                <th scope="col">Date</th>
+                <th scope="col">Type</th>
+                <th scope="col">Amount</th>
+                <th scope="col">Status</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="transaction : ${transactions}">
+                <td th:text="${transaction.transactionDate}"></td>
+                <td th:text="${transaction.transactionType}"
+                    th:classappend="${transaction.transactionType == T(ecommerce.accountmanagement.enums.TransactionType).DEPOSIT} ? 'transaction-type-deposit' : 'transaction-type-withdrawal'"></td>
+                <td th:text="${transaction.amount}"></td>
+                <td th:classappend="${transaction.transactionApprovalStatus.name().toLowerCase() == 'denied' ? 'transaction-status-denied' : (transaction.transactionApprovalStatus.name().toLowerCase() == 'pending' ? 'transaction-status-pending' : 'transaction-status-accepted')}"
+                    th:text="${transaction.transactionApprovalStatus.name()}"></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="statistics-container my-5">
+        <h2>Account Statistics</h2>
+        <form th:action="@{/account/account-statistics}" method="get" class="form-inline">
+            <div class="form-group mb-2">
+                <label for="startDate" class="sr-only">Start Date</label>
+                <input type="date" class="form-control" id="startDate" name="startDate" required>
+            </div>
+            <div class="form-group mx-sm-3 mb-2">
+                <label for="endDate" class="sr-only">End Date</label>
+                <input type="date" class="form-control" id="endDate" name="endDate" required>
+            </div>
+            <button type="submit" class="btn btn-primary mb-2">Get Statistics</button>
+        </form>
+        <div class="statistics-results mt-4">
+            <p><strong>Total Deposits:</strong> <span th:text="${totalDeposits}"></span></p>
+            <p><strong>Total Withdrawals:</strong> <span th:text="${totalWithdrawals}"></span></p>
+        </div>
+    </div>
+</div>
+</body>
+</html>

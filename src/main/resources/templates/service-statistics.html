@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <!-- Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Custom CSS -->
+    <link href="/css/service-statistics.css" rel="stylesheet">
+    <!-- Optional Bootstrap JS and dependencies -->
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+</head>
+<body>
+<div th:replace="~{fragments/header :: header}"></div>
+<div class="container mt-5">
+    <div class="row mb-5">
+        <div class="col-md-12">
+            <h2>All Accounts</h2>
+            <table class="table table-bordered table-hover">
+                <thead>
+                <tr>
+                    <th>Account Holder Name</th>
+                    <th>Balance</th>
+                    <th>Creation Date</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="account, accountStat : ${allAccounts}">
+                    <td th:text="${accountHolderNames[accountStat.index]}"></td>
+                    <td th:text="${account.balance}"></td>
+                    <td th:text="${#temporals.format(account.creationDate, 'yyyy-MM-dd HH:mm')}"></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <h2>Service Statistics</h2>
+            <form th:action="@{/service-statistics/all-users-statistics}" method="get" class="form-inline">
+                <div class="form-group mb-2">
+                    <label for="startDate" class="sr-only">Start Date</label>
+                    <input type="date" class="form-control" id="startDate" name="startDate" required>
+                </div>
+                <div class="form-group mx-sm-3 mb-2">
+                    <label for="endDate" class="sr-only">End Date</label>
+                    <input type="date" class="form-control" id="endDate" name="endDate" required>
+                </div>
+                <button type="submit" class="btn btn-primary mb-2">Get Statistics</button>
+            </form>
+            <div class="statistics-results mt-4">
+                <p><strong>Total Deposits:</strong> <span th:text="${totalDeposits}"></span></p>
+                <p><strong>Total Withdrawals:</strong> <span th:text="${totalWithdrawals}"></span></p>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

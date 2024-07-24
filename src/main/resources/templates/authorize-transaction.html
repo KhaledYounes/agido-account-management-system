@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <!-- Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Custom CSS -->
+    <link href="/static/css/authorize-transaction.css" rel="stylesheet">
+    <!-- Optional Bootstrap JS and dependencies -->
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+</head>
+<body>
+<div th:replace="~{fragments/header :: header}"></div>
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-md-12">
+            <h2 class="text-center">Authorize Transactions</h2>
+            <table class="table table-bordered table-striped mt-4">
+                <thead class="thead-dark">
+                <tr>
+                    <th>Account Holder Name</th>
+                    <th>Amount</th>
+                    <th>Transaction Date</th>
+                    <th>Actions</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="transaction, iterStat : ${transactions}">
+                    <td th:text="${accountHolderNames[iterStat.index]}">Account Holder Name</td>
+                    <td th:text="${transaction.amount}">Amount</td>
+                    <td th:text="${#temporals.format(transaction.transactionDate, 'yyyy-MM-dd HH:mm')}">Transaction Date</td>
+                    <td>
+                        <form th:action="@{/authorize-transaction/accept}" method="post" class="d-inline">
+                            <input type="hidden" name="transactionId" th:value="${transaction.transactionId}">
+                            <button type="submit" class="btn btn-success btn-sm">Accept</button>
+                        </form>
+                        <form th:action="@{/authorize-transaction/deny}" method="post" class="d-inline">
+                            <input type="hidden" name="transactionId" th:value="${transaction.transactionId}">
+                            <button type="submit" class="btn btn-danger btn-sm">Deny</button>
+                        </form>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+</body>
+</html>

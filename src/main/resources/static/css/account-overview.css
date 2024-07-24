@@ -1,0 +1,43 @@
+.balance-container .display-4 {
+    font-weight: bold;
+    color: #007bff;
+}
+
+.modal-header {
+    background-color: #f8f9fa;
+    border-bottom: 1px solid #dee2e6;
+}
+
+.modal-footer {
+    border-top: 1px solid #dee2e6;
+}
+
+.transaction-type-deposit {
+    color: #64bd64;
+}
+
+.transaction-type-withdrawal {
+    color: #f13131;
+}
+
+.transaction-status-denied {
+    color: #f13131;
+}
+
+.transaction-status-pending {
+    color: #b0b04c;
+}
+
+.transaction-status-accepted {
+    color: #64bd64;
+}
+
+.transaction-status-pending:hover::after {
+    content: "Withdrawal transaction should be authorized by the service";
+    position: absolute;
+    color: #011818;
+    padding: 0.5rem;
+    border-radius: 0.5rem;
+    margin-top: 0.5rem;
+    z-index: 1000;
+}
